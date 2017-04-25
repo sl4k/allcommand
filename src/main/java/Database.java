@@ -38,19 +38,22 @@ public class Database {
         }
     }
 
-    public static ResultSet executeStatement(String sqlQuery){
+    public static ResultSet executeStatement(String sqlQuery) throws SQLException {
+        getConnection();
         Statement stmt = null;
         ResultSet rs = null;
         System.out.println("Creating statement...");
         try {
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sqlQuery);
-
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return rs;
+    }
+
+    public static void closeConnection() throws SQLException {
+        conn.close();
     }
 
 }
