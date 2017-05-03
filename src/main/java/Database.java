@@ -52,6 +52,20 @@ public class Database {
         return rs;
     }
 
+    public static int executeUpdate(String sqlQuery) throws SQLException {
+        getConnection();
+        int status = 0;
+        Statement stmt = null;
+        System.out.println("Creating statement...");
+        try {
+            stmt = conn.createStatement();
+            status = stmt.executeUpdate(sqlQuery);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return status;
+    }
+
     public static void closeConnection() throws SQLException {
         conn.close();
     }
