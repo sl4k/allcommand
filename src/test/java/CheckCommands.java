@@ -1,33 +1,38 @@
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
-import java.sql.*;
+import java.sql.SQLException;
 
 public class CheckCommands {
+    private DataBaseOperationBO dataBaseOperationBO = new DataBaseOperationBO();
 
     @Test
     public void checkExtractionFromDB() throws SQLException {
-
         String sqlQuery = "SELECT * FROM test_table";
+        boolean statusOfOperation = dataBaseOperationBO.executeSelection(sqlQuery);
+        Assert.assertTrue(statusOfOperation, "Operation wasn't successful");
+    }
 
+    @Test
+    public void addValues() throws SQLException {
+        String sqlQuery = "INSERT INTO test_table VALUES(777, \"test_name\");";
+        boolean statusOfOperation = dataBaseOperationBO.executeValuesUpdating(sqlQuery);
+        Assert.assertTrue(statusOfOperation, "Operation wasn't successful");
+    }
 
-        ResultSet rs = Database.executeStatement(sqlQuery);
+    @Test(dependsOnMethods = "addValues")
+    public void updateValues() throws SQLException {
+        String sqlQuery = "UPDATE test_table SET name=\"updated_name\" WHERE id=777";
+        boolean statusOfOperation = dataBaseOperationBO.executeValuesUpdating(sqlQuery);
+        Assert.assertTrue(statusOfOperation, "Operation wasn't successful");
+    }
 
-        //Extract data from result set
-        while (rs.next()) {
-            //Retrieve by column name
-            int id = rs.getInt("id");
-            String name = rs.getString("name");
-
-            //Display values
-            System.out.println("ID: " + id);
-            System.out.println("Name: " + name);
-        }
-
-        rs.close();
-//        stmt.close();
-
-
+    @Test(dependsOnMethods = "updateValues")
+    public void deleteValues() throws SQLException {
+        String sqlQuery = "DELETE FROM test_table WHERE id=777";
+        boolean statusOfOperation = dataBaseOperationBO.executeValuesUpdating(sqlQuery);
+        Assert.assertTrue(statusOfOperation, "Operation wasn't successful");
     }
 
     @AfterClass
