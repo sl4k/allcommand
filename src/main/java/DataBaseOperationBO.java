@@ -24,8 +24,12 @@ public class DataBaseOperationBO {
         return isResultPrsent;
     }
 
-    public boolean executeValuesUpdating(String sqlQuery) throws SQLException {
+    public boolean executeUpdating(String sqlQuery) throws SQLException {
         int status = Database.executeUpdate(sqlQuery);
-        return status>0;
+        if(sqlQuery.toLowerCase().contains("create table") || sqlQuery.toLowerCase().contains("drop table") || sqlQuery.toLowerCase().contains("alter table")){
+            return status==0;
+        }else{
+            return status>0;
+        }
     }
 }
