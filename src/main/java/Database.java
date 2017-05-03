@@ -54,7 +54,7 @@ public class Database {
 
     public static int executeUpdate(String sqlQuery) throws SQLException {
         getConnection();
-        int status = 0;
+        int status = -1;
         Statement stmt = null;
         System.out.println("Creating statement...");
         try {
